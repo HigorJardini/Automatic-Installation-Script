@@ -38,4 +38,4 @@ which zsh
 #}
 
 cp .hyper.example .hyper.js
-mv -i .hyper.js ~/.hyper.js 
+mv -i .hyper.js ~/.hyper.js

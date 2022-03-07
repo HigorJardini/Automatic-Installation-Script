@@ -3,14 +3,14 @@ dialogMessage "Complete installation? (y or n)"
 while read -p "" INSTALL
 do
     if [ ! -z $INSTALL ]; then
-    
+
 	    if [ $INSTALL = 'y' ]; then
 		initShowDialog "Complete installation HAS SELECTED"
-		
+
 		break
 	    elif [ $INSTALL = 'n' ]; then
 		initShowDialog "Complete installation HAS NOT BEEN SELECTED"
-		
+
 		break
 	    else
 	    	#red
@@ -39,7 +39,7 @@ if [ $INSTALL = 'n' ]; then
 	if [ $BOOL = 1 ]; then
 		installGit
 	fi
-	
+
 else
 	installGit
 fi
@@ -52,7 +52,7 @@ if [ $INSTALL = 'n' ]; then
 	if [ $BOOL = 1 ]; then
 		installGoogleChrome
 	fi
-	
+
 else
 	installGoogleChrome
 fi
@@ -122,6 +122,31 @@ if [ $INSTALL = 'n' ]; then
 else
 	installVsCode
 fi
+
+# Install Postman
+if [ $INSTALL = 'n' ]; then
+	BOOL=0
+	booleanOption "Install Postman? (y or n)" "Postman HAS NOT BEEN CHANGED"
+	if [ $BOOL = 1 ]; then
+		installPostman
+	fi
+else
+	installPostman
+fi
+
+# Install Filezilla
+if [ $INSTALL = 'n' ]; then
+	BOOL=0
+	booleanOption "Install Filezilla? (y or n)" "Filezilla HAS NOT BEEN CHANGED"
+	if [ $BOOL = 1 ]; then
+		installFilezilla
+	fi
+else
+	installFilezilla
+fi
+
+#Finish script function execution
+finishScriptMessage
 
 
 
