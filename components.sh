@@ -73,16 +73,18 @@ function installZsh() {
 	
 	initShow "Installing Oh My Zsh ..."
 
-	sh zsh.sh
+	sudo apt install zsh
+	sh -c "$(wget -O- https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+
 }
 
 function installZshPlugins() {
 	# Install Oh My Zsh Plugins
 	initShow "Install Oh My Zsh Plugins"
 	
-	git clone https://github.com/zsh-users/zsh-autosuggestions ~/.oh-my-zsh/custom/plugins/zsh-autosuggestions
+	git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
 
-	git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ~/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting
+	git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting
 	
 	cp .zshrc_example .zshrc
 	mv -i .zshrc ~/.zshrc 
@@ -92,6 +94,58 @@ function installZshPlugins() {
 
 function UpdateAndUpgrade() {
 	sudo apt update && sudo apt upgrade
+}
+
+function changeWallpaper() {
+	sudo apt update
+}
+
+function installSpotify() {
+	snap install spotify
+}
+
+function installDocker() {
+	UpdateAndUpgrade
+	
+	sudo apt-get install \
+	     ca-certificates \
+	     curl \
+	     gnupg \
+	     lsb-release
+	
+	curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
+	
+	echo \
+  "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu \
+  $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+  	
+  	UpdateAndUpgrade
+  	
+  	sudo apt-get install docker-ce docker-ce-cli containerd.io
+  	
+  	#Test docker is running
+  	#sudo docker run hello-world
+}
+
+function configDocker() {
+	sudo groupadd docker
+	sudo usermod -aG docker $USER
+	#newgrp docker
+	docker run hello-world
+}
+
+function installDockerCompose() {
+	
+	sudo curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/bin/docker-compose
+	
+	sudo chmod +x /usr/bin/docker-compose
+	
+	#Test Version
+	docker-compose --version
+}
+
+function installVsCode() {
+	sudo snap install --classic code
 }
 
 function booleanOption() {
@@ -110,7 +164,7 @@ function booleanOption() {
 			
 			break
 		    else
-			initShowDialog "Insert value is invalid"
+			initShowDialog "Insert value has invalid"
 		    fi
 	    else
 		initShowDialog "Value is required"
@@ -118,7 +172,7 @@ function booleanOption() {
 	done
 }
 
-export -f initShow endShow initShowDialog dialogMessage installGit installGoogleChrome installZsh installZshPlugins UpdateAndUpgrade booleanOption
+export -f initShow endShow initShowDialog dialogMessage installGit installGoogleChrome installZsh installZshPlugins UpdateAndUpgrade changeWallpaper installSpotify installDocker installDockerCompose installVsCode booleanOption
 
 bash install.sh
 
